@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JobTest "Improving" fra Philip
 
-## Getting Started
+<hr>
 
-First, run the development server:
+## How to run
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Køre:**
+
+```
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Den installer alle node_modules.**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<br>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Derefter kan du køre:**
 
-## Learn More
+```
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+**For at starte en dev server lokalt.**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<hr>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Valg af teknologi
 
-## Deploy on Vercel
+Jeg har valgt at bruge NextJs som framework skrevet i TypeScript, fordi jeg føler mig komfortabel i det. Men det har også det gode ved sig at man kan kalde API'en i serveren så det ikke belaster brugerens system.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Til styling er jeg gået med Tailwind, fordi det simplet, nemt og hurtigt at skrive. Og helt klart mit først valg, når jeg starter et nyt projekt.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<hr>
+
+## Forbedringer
+
+**Jeg har brugt ca 3 timer på opgaven, med en lille pause.**
+
+Hvis jeg havde mere tid vil jeg ligge det i bonus opgaverne. Så som at kigge på sorteringsmuligheder fx sortering efter type Pokemon. Måske også lynhurtigt lave en theme switch knap (Den kører efter dit systems theme lige nu). Det vil også være spændende og ligge noget tid i at lave en favoritter funktion og liste der til.
+
+<hr>
+
+## Udfordringer
+
+Den største udfordring har været da jeg skulle hente alle pokemons og lave et kald for hver pokemon, så jeg kunne få mere data med, som billede, type højde og vægt. Fordi jeg gerne ville genbrug min getPokemon() funktion.
+
+```
+/* app/services/pokemons.ts */
+
+"use server";
+
+import { getPokemon } from "./pokemon";
+
+export const getPokemons = async (url: string) => {
+    try {
+        const response = await fetch(url).then((res) => res.json());
+
+        const pokemons = await Promise.all(
+            response.results.map(async (pokemon: { url: string }) => {
+                const data = await getPokemon(pokemon.url);
+                return { ...pokemon, data };
+            }),
+        );
+
+        return {
+            next: response.next,
+            pokemons: pokemons.map(
+                (pokemon: {
+                    id: number;
+                    name: string;
+                    data: {
+                        id: number;
+                        image: string;
+                        types: string[];
+                        height: number;
+                        weight: number;
+                    };
+                }) => ({
+                    id: pokemon.data.id,
+                    name: pokemon.name,
+                    image: pokemon.data.image,
+                    types: pokemon.data.types,
+                    height: pokemon.data.height,
+                    weight: pokemon.data.weight,
+                }),
+            ),
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+```

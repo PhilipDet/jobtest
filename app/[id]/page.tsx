@@ -59,8 +59,8 @@ const PokemonPage = ({ params }: { params: Promise<{ id: string }> }) => {
                                 </h1>
                                 <ul className="flex flex-col gap-2 list-disc pl-4">
                                     <li>ID: {pokemon.id}</li>
-                                    <li>Højde: {pokemon.height}</li>
-                                    <li>Vægt: {pokemon.weight}</li>
+                                    <li>Højde: {pokemon.height}m</li>
+                                    <li>Vægt: {pokemon.weight}kg</li>
                                     <li>Typer:</li>
                                     <ul>
                                         {pokemon.types.map((type: string) => (
