@@ -2,10 +2,12 @@
 
 import { TypeIcon } from "@/app/components/typeIcon";
 import { usePokemon } from "@/app/hooks/usePokemon";
-import { ArrowLeft } from "lucide-react";
+import { MoveLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { use } from "react";
+import { motion } from "framer-motion";
+import { fromLeft, fromRight, fromTop } from "../lib/animations";
 
 const PokemonPage = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = use(params);
@@ -13,29 +15,44 @@ const PokemonPage = ({ params }: { params: Promise<{ id: string }> }) => {
         `https://pokeapi.co/api/v2/pokemon/${id}`,
     );
 
-    console.log(pokemon);
-
     return (
         <main>
             <Link
                 href="/"
-                className="flex items-center bg-background py-2 px-4 rounded-lg"
+                className="text-2xl flex items-center gap-4 bg-background py-2 px-4 rounded-lg"
             >
-                <ArrowLeft /> Tilbage
+                <MoveLeft /> Tilbage
             </Link>
 
             {!loading && !error ? (
                 <>
-                    <section className="w-full bg-card-background rounded-lg grid grid-cols-2 items-center justify-center gap-4">
-                        <Image
-                            src={pokemon.image}
-                            alt={`Image of ${pokemon.name}`}
-                            width={600}
-                            height={600}
+                    <motion.section
+                        className="w-full bg-card-background rounded-lg grid grid-cols-2 max-sm:grid-cols-1 items-center justify-center gap-4"
+                        variants={fromTop}
+                        initial="hidden"
+                        whileInView="show"
+                    >
+                        <motion.div
                             className="w-full"
-                        />
+                            variants={fromLeft}
+                            initial="hidden"
+                            whileInView="show"
+                        >
+                            <Image
+                                src={pokemon.image}
+                                alt={`Image of ${pokemon.name}`}
+                                width={600}
+                                height={600}
+                                className="w-full"
+                            />
+                        </motion.div>
 
-                        <article className="flex justify-center">
+                        <motion.article
+                            className="flex justify-center p-10"
+                            variants={fromRight}
+                            initial="hidden"
+                            whileInView="show"
+                        >
                             <div className="flex flex-col gap-2 max-w-75 w-full text-lg">
                                 <h1 className="capitalize text-4xl font-bold text-center">
                                     {pokemon.name}
@@ -58,9 +75,14 @@ const PokemonPage = ({ params }: { params: Promise<{ id: string }> }) => {
                                     </ul>
                                 </ul>
                             </div>
-                        </article>
-                    </section>
-                    <div className="w-full flex flex-col gap-2 bg-card-background p-4 rounded-lg shadow-md">
+                        </motion.article>
+                    </motion.section>
+                    <motion.div
+                        className="w-full flex flex-col gap-2 bg-card-background p-4 rounded-lg shadow-md"
+                        variants={fromTop}
+                        initial="hidden"
+                        whileInView="show"
+                    >
                         <h2 className="text-2xl">Angrab</h2>
 
                         <ul className="flex flex-wrap gap-2">
@@ -76,7 +98,7 @@ const PokemonPage = ({ params }: { params: Promise<{ id: string }> }) => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </motion.div>
                 </>
             ) : error ? (
                 <p className="text-red-500">Fejl: {errormessage}</p>

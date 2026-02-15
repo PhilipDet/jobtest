@@ -4,6 +4,8 @@ import Image from "next/image";
 import { usePokemons } from "./hooks/usePokemons";
 import { TypeIcon } from "./components/typeIcon";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { fromLeft, fromRight, fromTop } from "./lib/animations";
 
 export const HomePage = () => {
     const { pokemons, loading, error, errorMessage, fetchMore, hasMore }: any =
@@ -12,7 +14,14 @@ export const HomePage = () => {
     return (
         <>
             <main>
-                <h1 className="text-4xl font-bold">Pokemon Liste</h1>
+                <motion.h1
+                    className="text-3xl font-bold flex items-center bg-background py-2 px-4 rounded-lg"
+                    variants={fromLeft}
+                    initial="hidden"
+                    whileInView="show"
+                >
+                    Pokemon Liste
+                </motion.h1>
 
                 {!error ? (
                     <>
@@ -26,9 +35,12 @@ export const HomePage = () => {
                                     height: number;
                                     weight: number;
                                 }) => (
-                                    <li
-                                        key={pokemon.id}
+                                    <motion.li
+                                        key={`pokemon-${pokemon.id}`}
                                         className="flex items-center justify-between gap-4 bg-card-background p-4 rounded-lg shadow-md"
+                                        variants={fromTop}
+                                        initial="hidden"
+                                        whileInView="show"
                                     >
                                         <div className="flex items-center gap-4">
                                             <Image
@@ -36,6 +48,7 @@ export const HomePage = () => {
                                                 alt={`Image of ${pokemon.name}`}
                                                 width={60}
                                                 height={60}
+                                                loading="lazy"
                                             />
                                             <h2 className="text-lg font-semibold capitalize">
                                                 {pokemon.name}
@@ -53,15 +66,19 @@ export const HomePage = () => {
                                                 ),
                                             )}
                                         </span>
-                                        <span>Højde: {pokemon.height}m</span>
-                                        <span>Vægt: {pokemon.weight}kg</span>
+                                        <span className="max-md:hidden">
+                                            Højde: {pokemon.height}m
+                                        </span>
+                                        <span className="max-md:hidden">
+                                            Vægt: {pokemon.weight}kg
+                                        </span>
                                         <Link
-                                            href={`/pokemon/${pokemon.id}`}
-                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded pointer-cursor"
+                                            href={`/${pokemon.id}`}
+                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
                                         >
                                             Detaljer
                                         </Link>
-                                    </li>
+                                    </motion.li>
                                 ),
                             )}
                         </ul>
@@ -70,17 +87,16 @@ export const HomePage = () => {
                     error && <p>Fejl: {errorMessage}</p>
                 )}
 
-                {loading ? (
-                    <p className="text-center text-lg">Henter Pokemons...</p>
-                ) : (
-                    hasMore && (
-                        <button
-                            onClick={fetchMore}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-                        >
-                            Indlæs flere
-                        </button>
-                    )
+                {!loading && hasMore && (
+                    <motion.button
+                        onClick={fetchMore}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                        variants={fromRight}
+                        initial="hidden"
+                        whileInView="show"
+                    >
+                        Indlæs flere
+                    </motion.button>
                 )}
             </main>
         </>

@@ -6,6 +6,13 @@
     --foreground: #171717;
 
     --card-background: #fdfdfd;
+
+    /* Dark theme */
+    --background-dark: #171717;
+    --muted-background-dark: #0e0e0e;
+    --foreground-dark: #ffffff;
+
+    --card-background-dark: #1f1f1f;
 }
 
 @theme inline {
@@ -14,6 +21,14 @@
     --color-foreground: var(--foreground);
 
     --color-card-background: var(--card-background);
+}
+
+@theme inline:dark {
+    --color-background: var(--background-dark);
+    --color-muted-background: var(--muted-background-dark);
+    --color-foreground: var(--foreground-dark);
+
+    --color-card-background: var(--card-background-dark);
 }
 
 body {

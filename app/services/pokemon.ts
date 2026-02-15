@@ -4,8 +4,6 @@ export const getPokemon = async (url: string) => {
     try {
         const response = await fetch(url).then((res) => res.json());
 
-        console.log(response.moves);
-
         if (!response) {
             throw new Error("Pokemonen blev ikke fundet");
         }

@@ -13,8 +13,6 @@ export const getPokemons = async (url: string) => {
             }),
         );
 
-        console.log(pokemons[0].data.types);
-
         return {
             next: response.next,
             pokemons: pokemons.map(
